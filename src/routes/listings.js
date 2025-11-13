@@ -25,20 +25,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/my-listings", async (req, res) => {
-  try {
-    const { email } = req.query;
-    if (!email) {
-      return res.status(400).json({ error: "Email parameter is required" });
-    }
-
-    const listings = await Listing.find({ email }).sort({ createdAt: -1 });
-    res.json(listings);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 router.get("/:id", async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -56,6 +42,22 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
+    // Validate required fields
+    const { name, category, price, location, email } = req.body;
+    if (!name || !category || price === undefined || !location || !email) {
+      return res.status(400).json({
+        error:
+          "Missing required fields: name, category, price, location, and email are required",
+      });
+    }
+
+    // Validate price is a number
+    if (typeof price !== "number" || price < 0) {
+      return res.status(400).json({
+        error: "Price must be a non-negative number",
+      });
+    }
+
     const listing = new Listing(req.body);
     await listing.save();
     res.status(201).json(listing);
@@ -69,6 +71,15 @@ router.post("/", async (req, res) => {
 
 router.patch("/:id", async (req, res) => {
   try {
+    // Validate price if provided
+    if (req.body.price !== undefined) {
+      if (typeof req.body.price !== "number" || req.body.price < 0) {
+        return res.status(400).json({
+          error: "Price must be a non-negative number",
+        });
+      }
+    }
+
     const listing = await Listing.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -80,6 +91,9 @@ router.patch("/:id", async (req, res) => {
   } catch (err) {
     if (err.name === "CastError") {
       return res.status(404).json({ error: "Listing not found" });
+    }
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ error: err.message });
     }
     res.status(400).json({ error: err.message });
   }
