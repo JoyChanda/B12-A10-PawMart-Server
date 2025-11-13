@@ -25,6 +25,20 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/my-listings", async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ error: "Email parameter is required" });
+    }
+
+    const listings = await Listing.find({ email }).sort({ createdAt: -1 });
+    res.json(listings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -46,6 +60,9 @@ router.post("/", async (req, res) => {
     await listing.save();
     res.status(201).json(listing);
   } catch (err) {
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ error: err.message });
+    }
     res.status(400).json({ error: err.message });
   }
 });
