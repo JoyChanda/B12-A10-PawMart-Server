@@ -1,0 +1,33 @@
+{
+  "name": "pawmart-server",
+  "version": "1.0.0",
+  "description": "Backend API for PawMart project",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint .",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "author": "Joy Chanda",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.23",
+    "mongoose": "^8.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoyChanda/B12-A10-PawMart-Server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JoyChanda/B12-A10-PawMart-Server/issues"
+  },
+  "homepage": "https://github.com/JoyChanda/B12-A10-PawMart-Server#readme"
+}
