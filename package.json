@@ -18,6 +18,7 @@
     "express": "^4.21.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.23",
+    "mongo-express": "^1.1.0-rc-3",
     "mongoose": "^8.8.1"
   },
   "devDependencies": {
