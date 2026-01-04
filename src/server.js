@@ -46,9 +46,11 @@ app.get("/", (req, res) => {
 // ✅ Routes
 const listingsRoute = require("./routes/listings");
 const ordersRoute = require("./routes/orders");
+const usersRoute = require("./routes/users");
 
 app.use("/api/listings", listingsRoute);
 app.use("/api/orders", ordersRoute);
+app.use("/api/users", usersRoute);
 
 // 404 handler
 app.use((req, res) => {
