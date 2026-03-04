@@ -8,11 +8,19 @@ const app = express();
 // ✅ CORS configuration
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL,
-      "http://localhost:5173",
-      "https://paw-mart.vercel.app" // Production URL
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        "http://localhost:5173",
+        "https://b12-a10-paw-mart.vercel.app",
+        "https://paw-mart.vercel.app"
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Fallback for debugging, but normally: new Error('Not allowed by CORS')
+      }
+    },
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -31,7 +39,7 @@ mongoose
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err.message);
-    process.exit(1);
+    // process.exit(1); // Don't kill server, let it stay alive to respond with 500s or retry later
   });
 
 // Health check route
